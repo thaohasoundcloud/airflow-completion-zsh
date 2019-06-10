@@ -1,6 +1,6 @@
 COMPLETION_FILE="$AIRFLOW_HOME/.airflow_completion"
 
-update_full_airflow_completion(){
+_airflow_completion_update_full(){
 	rm $COMPLETION_FILE 
 	list_dags=$(airflow list_dags; echo x)
 	lines=("${(f)list_dags%x}")
@@ -15,7 +15,7 @@ update_full_airflow_completion(){
 	done
 }
 
-update_airflow_dag_completion() {
+_airflow_completion_update_dag() {
         dag_name=${1}
 	list_dags=$(airflow list_dags | grep "$dag_name"; echo x)
 	lines=("${(f)list_dags%x}")
@@ -36,7 +36,7 @@ update_airflow_dag_completion() {
 	done
 }
 
-delete_dag_from_completion() {
+_airflow_completion_delete_dag() {
         dag=${1}
 	list_dags=$(airflow list_dags | grep "$dag"; echo x)
 	lines=("${(f)list_dags%x}")
@@ -45,3 +45,19 @@ delete_dag_from_completion() {
 		sed -i '' -e "/^$dag.*/d" "$COMPLETION_FILE"
 	fi
 }
+
+airflow_completion() {
+	case "$1" in 
+		(update_full)
+			(_airflow_completion_update_full)
+		;;
+		(update_dag)
+			(_airflow_completion_update_dag $2)
+		;;
+		(delete_dag)
+			(_airflow_completion_delete_dag $2)
+		;;
+	esac
+	return 1
+}
+

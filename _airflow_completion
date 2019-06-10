@@ -1,0 +1,33 @@
+#compdef airflow_completion
+
+COMPLETION_FILE="$AIRFLOW_HOME/.airflow_completion"
+
+_airflow_completion_completion() {
+	typeset -A opt_args
+	_arguments -C '1:cmd:->cmds' '2:dags:->dag_list' '*:: :->args' && ret=0
+	
+	if [[ ! -v AIRFLOW_HOME ]]; then
+                return 0
+        fi
+	
+	case "$state" in
+		(cmds)
+			local -a commands
+			commands=(
+				'update_full'
+				'update_dag'
+				'delete_dag'
+			)
+			 _describe -t commands 'command' commands && ret=0
+		;;
+		(dag_list)
+			local dags;
+			commands_need_dags=('update_dag' 'delete_dag')
+			dags=(`cat $COMPLETION_FILE | awk '{print $1;}'`)
+			_describe -t dags 'dag' dags && ret=0
+		;;	
+	esac			
+	return 1
+}
+
+_airflow_completion_completion
