@@ -1,3 +1,4 @@
+#!/bin/zsh
 COMPLETION_FILE="$AIRFLOW_HOME/.airflow_completion"
 
 _airflow_completion_update_full(){
