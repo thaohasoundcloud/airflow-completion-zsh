@@ -1,4 +1,4 @@
-#compdef airflow_completion
+#compdef aircom
 
 COMPLETION_FILE="$AIRFLOW_HOME/.airflow_completion"
 

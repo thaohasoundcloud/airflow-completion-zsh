@@ -1,24 +1,30 @@
-# Airflow completion
+# Airflow auto-completion
+This repo builds auto-completion scripts for **Apache Airflow** command line tool in **z-shell**.
 
-### Configuration
+The completion is based on a cache file named **`.airflow_completion`**, which stores all dag and task names. This file is put in **AIRFLOW_HOME** folder. 
+To build `.airflow_completion` cache file, we use **`aircom`** command.
 
-1. Settings in .zshrc
+### Set up
+1. Git clone this repo.
+2. Put below settings in .zshrc
 ```bash
 # COMPLETION SETTINGS
 # add custom completion scripts
-fpath=(<your_completion_folder> $fpath)
+source "<your_repo_folder>/aircom.zsh"
+fpath=(<your_repo_folder> $fpath)
 
-# show completion menu when number of options is at least 2
-# zstyle ':completion:*' menu select=2
-# compsys initialization
 autoload -U compinit
 compinit
-# autoload -U compinit && compinit
-# autoload -U bashcompinit && bashcompinit
 ```
-2. Run `exec zsh` to apply changes
-3. The completion requires *AIRFLOW_HOME* is set
-4. The completion is based on a cache file which is called `.airflow_completion`. This file is put in *AIRFLOW_HOME* folder.
-For the first time running airflow_completion, run `airflow_completion update_full` to build cache file. Then it's okay to use. 
-5. For any channges to dags, run `airflow_completion update_dag <dag_name>` to update dag when it has more tasks or changes task names.
-To delete a dag out of cache file, run `airflow_completion delete_dag <dag_name>` to delete.
+3. Run `exec zsh` to apply changes.
+4. Spin up your airflow virtual environment. The completion script requires *AIRFLOW_HOME* is set.
+5. Run `aircom update_full`: build cache file `.airflow_completion` in Airflow home folder.
+
+It's okay to use now. For example, type `airflow test<TAB>`, a list of dags should be shown. 
+
+### Commands
+- `aircom update_dag <dag_name>`: add/update dag info in cache file when new dag is created, or the dag has more tasks/sub-dags or changes task/subdag names.
+- `aircom delete_dag <dag_name>` to delete a dag out of cache file.
+- `aircom update_full`: rebuild all dags in cache file.
+
+**NOTE**: command `aircom` do have auto-complete, so you can use `TAB`s to interact.
